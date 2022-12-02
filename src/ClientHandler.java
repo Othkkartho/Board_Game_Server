@@ -40,7 +40,7 @@ public class ClientHandler implements Runnable {
             try {
                 diceNum = dis.read();
                 System.out.println(diceNum);
-                if (diceNum == -1) {
+                if (diceNum == 0) {
                     System.out.println(this.name + " is just leaved.");
                     dos.writeUTF("Good Bye");
                     this.s.close(); // 접속을 종료하는 클라이언트의 서버 쪽 소켓을 닫음
