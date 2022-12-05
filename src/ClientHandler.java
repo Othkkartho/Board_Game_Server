@@ -29,12 +29,12 @@ public class ClientHandler implements Runnable {
 
     @Override
     public void run() {
-        int[] board = new int[500];
+        int[] board = new int[100];
         board = board(board);
-        int diceNum = 0;
+        int diceNum;
         boolean rest = false;
-        String msg = null;
-        String data = null;
+        String msg;
+        String data;
 
         while (true) {
             try {
@@ -119,16 +119,16 @@ public class ClientHandler implements Runnable {
         Random random = new Random();
 
         while (true) {
-            i += random.nextInt(5, 15);
-            if (i >= 500)
+            i += random.nextInt(board.length/20, board.length/10);
+            if (i >= board.length)
                 break;
             board[i] = 1;   // jump
         }
 
         i = 0;
         while (true) {
-            i += random.nextInt(5, 20);
-            if (i >= 500)
+            i += random.nextInt(board.length/20, board.length/10);
+            if (i >= board.length)
                 break;
             if (board[i] == 0)
                 board[i] = 2;   // back
@@ -136,8 +136,8 @@ public class ClientHandler implements Runnable {
 
         i = 0;
         while (true) {
-            i += random.nextInt(20, 30);
-            if (i >= 500)
+            i += random.nextInt(board.length/10, board.length/5);
+            if (i >= board.length)
                 break;
             if (board[i] == 0)
                 board[i] = 3;   // skip
