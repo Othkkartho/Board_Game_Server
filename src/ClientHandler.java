@@ -29,7 +29,7 @@ public class ClientHandler implements Runnable {
 
     @Override
     public void run() {
-        int[] board = new int[100];
+        int[] board = new int[25];
         board = board(board);
         int diceNum;
         boolean rest = false;
@@ -54,36 +54,27 @@ public class ClientHandler implements Runnable {
                 }
                 else {
                     this.sum += diceNum;
-                    if (this.sum > 500) {
-                        for (ClientHandler handler : StreamServer.clients) {
-                            if (handler.name.equals(this.name))
-                                continue;
-                            if (handler.sum == this.sum) {
-                                handler.sum = 0;
-                                dos.writeUTF("win");
-                                handler.dos.writeUTF("lose");
-                            }
-                        }
-                    }
 
+                    checkEnd(board);
                     catchs(name, sum, dos);
 
                     if (board[this.sum] == 1) {
                         this.sum += diceNum;
-                        msg = diceNum + "만큼 점프해 현재 " + this.sum + "칸 입니다.";
+                        msg = "Jump!! " + diceNum + "칸을 점프해 현재 " + this.sum + "칸 입니다.";
                     }
                     else if (board[this.sum] == 2) {
                         this.sum -= diceNum;
-                        msg = diceNum + "만큼 후퇴해 현재 " + this.sum + "칸 입니다.";
+                        msg = "Back!! " + diceNum + "칸을 후퇴해 현재 " + this.sum + "칸 입니다.";
                     }
                     else if (board[this.sum] == 3) {
-                        msg = "무인도에 걸려 한턴을 쉽니다.";
+                        msg = "현재 " + this.sum + "칸 입니다.\n무인도에 걸려 한턴을 쉽니다.";
                         rest = true;
                     }
                     else {
                         msg = "현재 " + this.sum + "칸 입니다.";
                     }
 
+                    checkEnd(board);
                     catchs(name, sum, dos);
                 }
                 dos.writeUTF(msg);
@@ -96,6 +87,21 @@ public class ClientHandler implements Runnable {
                 }
             } catch (IOException e) {
                 throw new RuntimeException(e);
+            }
+        }
+    }
+
+    private void checkEnd(int[] board) throws IOException {
+        if (this.sum >= board.length) {
+            for (ClientHandler handler : StreamServer.clients) {
+                if (handler.name.equals(this.name)) {
+                    dos.writeUTF("win");
+                    this.s.close();
+                }
+                else {
+                    handler.dos.writeUTF("lose");
+                    handler.s.close();
+                }
             }
         }
     }
