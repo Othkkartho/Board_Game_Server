@@ -30,6 +30,8 @@ public class Buffer_Channel_Server_Test {
             ByteBuffer buffer = ByteBuffer.allocate(64);
             System.out.println("Game server is ready.");
 
+            ClientHandler setup = new ClientHandler();
+
             while (true) {
                 selector.select();
                 Set<SelectionKey> keys = selector.selectedKeys();
@@ -63,12 +65,11 @@ public class Buffer_Channel_Server_Test {
                         }
                         else {
                             int diceNum = Integer.parseInt(data);
+                            int i = 0;
 
                             for (ClientHandler handler : clients) {
                                 if (handler.name.equals(what)) {
                                     handler.player(handler.client, diceNum);
-                                } else {
-                                    handler.other_player(handler.client, diceNum, what);
                                 }
                             }
                         }
