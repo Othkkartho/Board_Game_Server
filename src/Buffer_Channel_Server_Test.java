@@ -12,10 +12,11 @@ import java.util.Set;
 
 public class Buffer_Channel_Server_Test {
     public static Vector<ClientHandler> clients = new Vector<>();
+    public static int[] board;
 
     private static void informNew(String name) throws IOException {
         for (ClientHandler handler : clients)
-            HelperMethods_Test.sendMessage(handler.client, name + "is just logged in");
+            HelperMethods_Test.sendMessage(handler.client, name + " is just logged in");
     }
 
     public static void main(String[] args) {
@@ -28,9 +29,8 @@ public class Buffer_Channel_Server_Test {
 
             sschannel.register(selector, SelectionKey.OP_ACCEPT);
             ByteBuffer buffer = ByteBuffer.allocate(64);
+            board = ClientHandler.boardSetup();
             System.out.println("Game server is ready.");
-
-            ClientHandler setup = new ClientHandler();
 
             while (true) {
                 selector.select();
@@ -69,7 +69,7 @@ public class Buffer_Channel_Server_Test {
 
                             for (ClientHandler handler : clients) {
                                 if (handler.name.equals(what)) {
-                                    handler.player(handler.client, diceNum);
+                                    handler.test_player(handler.client, diceNum, board);
                                 }
                             }
                         }

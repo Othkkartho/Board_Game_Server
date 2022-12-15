@@ -7,10 +7,11 @@ public class ClientHandler {
     String name;
     int sum;
     String msg = null;
-    int[] board = new int[200];
 
-    public ClientHandler() {
-        board = board(board);
+    public static int[] boardSetup() {
+        int[] board = new int[200];
+        board(board);
+        return board;
     }
 
     public ClientHandler(SocketChannel client, String name, int sum) {
@@ -28,7 +29,7 @@ public class ClientHandler {
         }
     }
 
-    public void player(SocketChannel channel, int num) {
+    public void test_player(SocketChannel channel, int num, int[] board) {
         boolean rest = false;
 
         System.out.println(num);
@@ -41,77 +42,78 @@ public class ClientHandler {
             }
 
             if (rest == true) {
-                msg = "You can move on your next turn.";
+                msg = "skip2";
                 rest = false;
             }
             else {
                 sum += num;
                 if (sum >= board.length) {
-                    HelperMethods_Test.sendMessage(channel, "win");
+                    HelperMethods_Test.sendMessage(channel, "win#"+board.length);
                 }
             }
 
-            if (catchs())
+            if (catchs(num))
                 return;
 
             if (board[sum] == 1) {
                 sum += num;
-                msg = "Jump " + num + "!!! You are in the " + sum + " column.";
+                msg = "jump#"+sum;
             }
             else if (board[sum] == 2) {
                 sum -= num;
-                msg = "Back " + num + "!!! You are in the " + sum + " column.";
+                msg = "back#"+sum;
             }
             else if (board[sum] == 3) {
-                msg = "Your stranded on an uninhabited island.";
+                msg = "skip";
                 rest = true;
             }
             else {
-                msg = "You are in the " + sum + " column.";
+                msg = "go#"+sum;
             }
 
-            if (catchs(msg))
+            if (catchs(msg, num))
                 return;
         } catch (IOException ex) {
-        throw new RuntimeException(ex);
+            throw new RuntimeException(ex);
         }
 
         HelperMethods_Test.sendMessage(client, msg);
         for (ClientHandler handler : Buffer_Channel_Server_Test.clients) {
-            if (!handler.name.equals(name))
-                HelperMethods_Test.sendMessage(handler.client, name + " >> " + msg);
+            if (!handler.name.equals(name)) {
+                HelperMethods_Test.sendMessage(handler.client, name+"#"+msg+"#"+num);
+            }
         }
     }
 
-    public boolean catchs() {
+    public boolean catchs(int num) {
         for (ClientHandler handler : Buffer_Channel_Server_Test.clients) {
             if (handler.name.equals(name))
                 continue;
             if (sum > 0 && handler.sum > 0 && handler.sum == sum) {
                 handler.sum = 0;
-                HelperMethods_Test.sendMessage(client, "catch You are" + sum + " column.");
-                HelperMethods_Test.sendMessage(handler.client, "Grab the opponent's piece and the opponent will return to the beginning.");
+                HelperMethods_Test.sendMessage(client, "catch#"+sum);
+                HelperMethods_Test.sendMessage(handler.client, name+"#catch#"+sum+"#"+num);
                 return true;
             }
         }
         return false;
     }
 
-    public boolean catchs(String msg) {
+    public boolean catchs(String msg, int num) {
         for (ClientHandler handler : Buffer_Channel_Server_Test.clients) {
             if (handler.name.equals(name))
                 continue;
             if (sum > 0 && handler.sum > 0 && handler.sum == sum) {
                 handler.sum = 0;
-                HelperMethods_Test.sendMessage(client, msg + " and catch other player");
-                HelperMethods_Test.sendMessage(handler.client, "Grab the opponent's piece and the opponent will return to the beginning.");
+                HelperMethods_Test.sendMessage(client, "catch#"+msg);
+                HelperMethods_Test.sendMessage(handler.client, name+"#catch"+msg+"#"+num);
                 return true;
             }
         }
         return false;
     }
 
-    public int[] board(int[] board) {
+    public static int[] board(int[] board) {
         for (int n : board)
             board[n] = 0;
         int i = 0;
