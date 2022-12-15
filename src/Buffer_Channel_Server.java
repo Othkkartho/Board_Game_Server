@@ -69,7 +69,7 @@ public class Buffer_Channel_Server {
 
                             for (ClientHandler handler : clients) {
                                 if (handler.name.equals(what)) {
-                                    handler.test_player(handler.client, diceNum, board);
+                                    handler.player(handler.client, diceNum, board);
                                 }
                             }
                         }

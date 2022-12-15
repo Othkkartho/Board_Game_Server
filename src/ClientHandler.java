@@ -29,7 +29,7 @@ public class ClientHandler {
         }
     }
 
-    public void test_player(SocketChannel channel, int num, int[] board) {
+    public void player(SocketChannel channel, int num, int[] board) {
         boolean rest = false;
 
         System.out.println(num);
