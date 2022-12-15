@@ -7,13 +7,10 @@ public class ClientHandler {
     String name;
     int sum;
     String msg = null;
-    int jn;
-    int bn;
 
     public static int[] boardSetup() {
         int[] board = new int[200];
         board(board);
-        jn = Securte
         return board;
     }
 
