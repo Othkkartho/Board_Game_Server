@@ -21,10 +21,10 @@ public class ClientHandler {
     }
 
     private void informLeave(ClientHandler handler) throws IOException {
-        for (ClientHandler mc : Buffer_Channel_Server_Test.clients) {
+        for (ClientHandler mc : Buffer_Channel_Server.clients) {
             if (!mc.name.equals(handler.name)) {
                 msg = handler.name + " is just leaved.";
-                HelperMethods_Test.sendMessage(mc.client, msg);
+                HelperMethods.sendMessage(mc.client, msg);
             }
         }
     }
@@ -36,7 +36,7 @@ public class ClientHandler {
         try {
             if (num == 0) {
                 System.out.println(name + " is just leaved.");
-                HelperMethods_Test.sendMessage(client, "Good Bye");
+                HelperMethods.sendMessage(client, "Good Bye");
                 client.close();
                 informLeave(this);
             }
@@ -48,7 +48,7 @@ public class ClientHandler {
             else {
                 sum += num;
                 if (sum >= board.length) {
-                    HelperMethods_Test.sendMessage(channel, "win#"+board.length);
+                    HelperMethods.sendMessage(channel, "win#"+board.length);
                 }
             }
 
@@ -77,22 +77,22 @@ public class ClientHandler {
             throw new RuntimeException(ex);
         }
 
-        HelperMethods_Test.sendMessage(client, msg);
-        for (ClientHandler handler : Buffer_Channel_Server_Test.clients) {
+        HelperMethods.sendMessage(client, msg);
+        for (ClientHandler handler : Buffer_Channel_Server.clients) {
             if (!handler.name.equals(name)) {
-                HelperMethods_Test.sendMessage(handler.client, name+"#"+msg+"#"+num);
+                HelperMethods.sendMessage(handler.client, name+"#"+msg+"#"+num);
             }
         }
     }
 
     public boolean catchs(int num) {
-        for (ClientHandler handler : Buffer_Channel_Server_Test.clients) {
+        for (ClientHandler handler : Buffer_Channel_Server.clients) {
             if (handler.name.equals(name))
                 continue;
             if (sum > 0 && handler.sum > 0 && handler.sum == sum) {
                 handler.sum = 0;
-                HelperMethods_Test.sendMessage(client, "catch#"+sum);
-                HelperMethods_Test.sendMessage(handler.client, name+"#catch#"+sum+"#"+num);
+                HelperMethods.sendMessage(client, "catch#"+sum);
+                HelperMethods.sendMessage(handler.client, name+"#catch#"+sum+"#"+num);
                 return true;
             }
         }
@@ -100,13 +100,13 @@ public class ClientHandler {
     }
 
     public boolean catchs(String msg, int num) {
-        for (ClientHandler handler : Buffer_Channel_Server_Test.clients) {
+        for (ClientHandler handler : Buffer_Channel_Server.clients) {
             if (handler.name.equals(name))
                 continue;
             if (sum > 0 && handler.sum > 0 && handler.sum == sum) {
                 handler.sum = 0;
-                HelperMethods_Test.sendMessage(client, "catch#"+msg);
-                HelperMethods_Test.sendMessage(handler.client, name+"#catch"+msg+"#"+num);
+                HelperMethods.sendMessage(client, "catch#"+msg);
+                HelperMethods.sendMessage(handler.client, name+"#catch"+msg+"#"+num);
                 return true;
             }
         }
