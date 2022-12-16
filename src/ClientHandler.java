@@ -41,8 +41,10 @@ public class ClientHandler {
                 informLeave(this);
             }
 
-            if (rest == true) {
+            if (rest == true && board[sum] == 3) {
                 msg = "skip2";
+                rest = false;
+            } else if (rest == true) {
                 rest = false;
             } else {
                 sum += num;
