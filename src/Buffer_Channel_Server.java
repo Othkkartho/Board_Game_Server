@@ -116,6 +116,13 @@ public class Buffer_Channel_Server {
                             informNew(data);
                             clients.add(handler);
                             System.out.println(data + " 게임 참가 완료");
+                        } else if (data.equals("quit")) {
+                            clients.removeIf(handler -> handler.name.equals(what));
+                            for (ClientHandler handler : clients)
+                                if (!handler.name.equals(what)) {
+                                    HelperMethods.sendMessage(handler.client, what+" is leaved");
+                                }
+                            client.close();
                         } else {
                             int diceNum = Integer.parseInt(data);
 
@@ -129,9 +136,10 @@ public class Buffer_Channel_Server {
                     iterator.remove();
                 }
 
-                i = (i+1)%3;
-
-                HelperMethods.sendMessage(clients.get(i).client, "Your Turn");
+                if (clients.size() != 0) {
+                    i = (i+1)% clients.size();
+                    HelperMethods.sendMessage(clients.get(i).client, "Your Turn");
+                }
             }
         } catch (IOException e) {
             e.printStackTrace();
