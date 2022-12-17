@@ -1,6 +1,5 @@
 import java.io.IOException;
 import java.net.InetSocketAddress;
-import java.nio.ByteBuffer;
 import java.nio.channels.SelectionKey;
 import java.nio.channels.Selector;
 import java.nio.channels.ServerSocketChannel;
@@ -28,7 +27,6 @@ public class Buffer_Channel_Server {
             sschannel.configureBlocking(false);
 
             sschannel.register(selector, SelectionKey.OP_ACCEPT);
-            ByteBuffer buffer = ByteBuffer.allocate(64);
             board = ClientHandler.boardSetup();
             System.out.println("Game server is ready.");
 
