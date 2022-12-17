@@ -123,7 +123,7 @@ public class ClientHandler {
                 handler.sum = 0;
                 HelperMethods.sendMessage(client, "catch#"+msg);
                 TimeUnit.SECONDS.sleep(1);
-                HelperMethods.sendMessage(handler.client, name+"#catch"+msg);
+                HelperMethods.sendMessage(handler.client, name+"#catch");
                 return true;
             }
         }
