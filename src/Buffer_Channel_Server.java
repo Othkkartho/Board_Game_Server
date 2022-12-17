@@ -6,14 +6,16 @@ import java.nio.channels.Selector;
 import java.nio.channels.ServerSocketChannel;
 import java.nio.channels.SocketChannel;
 import java.util.*;
+import java.util.concurrent.TimeUnit;
 
 public class Buffer_Channel_Server {
     public static Vector<ClientHandler> clients = new Vector<>();
     public static int[] board;
 
-    private static void informNew(String name) throws IOException {
+    private static void informNew(String name) throws IOException, InterruptedException {
         for (ClientHandler handler : clients)
             HelperMethods.sendMessage(handler.client, name + " is just logged in");
+        TimeUnit.SECONDS.sleep(1);
     }
 
     private static Selector acceptClient() {
@@ -63,6 +65,7 @@ public class Buffer_Channel_Server {
                             clients.add(handler);
                             if (clients.size() == 1) {
                                 HelperMethods.sendMessage(handler.client, "host");
+                                TimeUnit.SECONDS.sleep(1);
                             }
                             System.out.println(data + " 게임 참가 완료");
                         }
@@ -79,19 +82,24 @@ public class Buffer_Channel_Server {
             }
         } catch (IOException e) {
             e.printStackTrace();
+        } catch (InterruptedException e) {
+            throw new RuntimeException(e);
         }
         return selector;
     }
 
-    private static void startGame(Selector selector) {
+    private static void startGame(Selector selector) throws InterruptedException {
         System.out.println("참가자들 게임 시작");
-        for (ClientHandler handler : clients)
+        for (ClientHandler handler : clients) {
             HelperMethods.sendMessage(handler.client, "Game Start");
+            TimeUnit.SECONDS.sleep(1);
+        }
 
         try {
             int i = 0;
 
             HelperMethods.sendMessage(clients.get(i).client, "Your Turn");
+            TimeUnit.SECONDS.sleep(1);
 
             while (true) {
                 selector.select();
@@ -121,6 +129,7 @@ public class Buffer_Channel_Server {
                             for (ClientHandler handler : clients)
                                 if (!handler.name.equals(what)) {
                                     HelperMethods.sendMessage(handler.client, what+" is leaved");
+                                    TimeUnit.SECONDS.sleep(1);
                                 }
                             client.close();
                         } else {
@@ -139,14 +148,17 @@ public class Buffer_Channel_Server {
                 if (clients.size() != 0) {
                     i = (i+1)% clients.size();
                     HelperMethods.sendMessage(clients.get(i).client, "Your Turn");
+                    TimeUnit.SECONDS.sleep(1);
                 }
             }
         } catch (IOException e) {
             e.printStackTrace();
+        } catch (InterruptedException e) {
+            throw new RuntimeException(e);
         }
     }
 
-    public static void main(String[] args) {
+    public static void main(String[] args) throws InterruptedException {
         Selector selector = acceptClient();
         startGame(selector);
     }
