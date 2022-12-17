@@ -7,6 +7,7 @@ public class ClientHandler {
     String name;
     int sum;
     String msg = null;
+    boolean rest = false;
 
     public static int[] boardSetup() {
         int[] board = new int[200];
@@ -30,7 +31,6 @@ public class ClientHandler {
     }
 
     public void player(SocketChannel channel, int num, int[] board) {
-        boolean rest = false;
 
         System.out.println(num);
         try {
