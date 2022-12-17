@@ -10,13 +10,15 @@ public class ClientHandler implements Runnable {
     DataOutputStream dos;
     String name;
     int sum;
+    int[] board;
 
-    public ClientHandler(Socket s, DataInputStream dis, DataOutputStream dos, String name, int sum) {
+    public ClientHandler(Socket s, DataInputStream dis, DataOutputStream dos, String name, int sum, int[] board) {
         this.s = s;
         this.dis = dis;
         this.dos = dos;
         this.name = name;
         this.sum = sum;
+        this.board = board;
     }
 
     private void informLeave(ClientHandler handler) throws IOException {
@@ -29,8 +31,6 @@ public class ClientHandler implements Runnable {
 
     @Override
     public void run() {
-        int[] board = new int[25];
-        board = board(board);
         int diceNum;
         boolean rest = false;
         String msg;
@@ -118,7 +118,7 @@ public class ClientHandler implements Runnable {
         }
     }
 
-    public int[] board(int[] board) {
+    public static int[] board(int[] board) {
         for (int n : board)
             board[n] = 0;
         int i = 0;

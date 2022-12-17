@@ -15,6 +15,8 @@ public class StreamServer {
     public static void main(String[] args) {
         try {
             ServerSocket server = new ServerSocket(3005);
+            int[] board = new int[25];
+            ClientHandler.board(board);
 
             while (true) {
                 System.out.println("Server is waiting");
@@ -27,7 +29,7 @@ public class StreamServer {
                 System.out.println(name + ": Welcome to the server.");
                 informNew(name);
 
-                ClientHandler handler = new ClientHandler(socket, dis, dos, name, 0);
+                ClientHandler handler = new ClientHandler(socket, dis, dos, name, 0, board);
                 Thread thread = new Thread(handler);
                 System.out.println("Adding this client to client vector");
                 clients.add(handler);
