@@ -125,7 +125,8 @@ public class ClientHandler implements Runnable {
         Random random = new Random();
 
         while (true) {
-            i += random.nextInt(board.length/20, board.length/10);
+//            i += random.nextInt(board.length/20, board.length/10);
+            i += 3;
             if (i >= board.length)
                 break;
             board[i] = 1;   // jump
@@ -133,7 +134,8 @@ public class ClientHandler implements Runnable {
 
         i = 0;
         while (true) {
-            i += random.nextInt(board.length/20, board.length/10);
+//            i += random.nextInt(board.length/20, board.length/10);
+            i += 4;
             if (i >= board.length)
                 break;
             if (board[i] == 0)
@@ -142,7 +144,8 @@ public class ClientHandler implements Runnable {
 
         i = 0;
         while (true) {
-            i += random.nextInt(board.length/10, board.length/5);
+//            i += random.nextInt(board.length/10, board.length/5);
+            i += 5;
             if (i >= board.length)
                 break;
             if (board[i] == 0)
