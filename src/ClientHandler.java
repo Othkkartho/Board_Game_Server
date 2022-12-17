@@ -75,9 +75,9 @@ public class ClientHandler implements Runnable {
                     }
 
                     checkEnd(board);
-                    catchs(name, sum, dos);
                 }
                 dos.writeUTF(msg);
+                catchs(name, sum, dos);
 
                 for (ClientHandler handler : StreamServer.clients) {
                     if (!handler.name.equals(this.name)) {
