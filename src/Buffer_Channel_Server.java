@@ -118,10 +118,7 @@ public class Buffer_Channel_Server {
                         String data = tokenizer.nextToken();
 
                         if (what.equals("name")) {
-                            ClientHandler handler = new ClientHandler(client, data, 0);
-                            informNew(data);
-                            clients.add(handler);
-                            System.out.println(data + " 게임 참가 완료");
+                            HelperMethods.sendMessage(client, "Unable in the game.");
                         } else if (data.equals("quit")) {
                             clients.removeIf(handler -> handler.name.equals(what));
                             for (ClientHandler handler : clients)
