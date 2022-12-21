@@ -48,11 +48,13 @@ public class ClientHandler implements Runnable {
                     break;
                 }
 
-                if (rest == true) {
+                if (rest == true && board[sum] == 3) {
                     msg = "다음 턴에 이동할 수 있습니다.";
                     rest = false;
                 } else {
                     this.sum += diceNum;
+                    if (rest)
+                        rest = false;
 
                     checkEnd(board);
                     if (catchs(name, sum, dos)) {
