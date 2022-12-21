@@ -51,27 +51,25 @@ public class ClientHandler implements Runnable {
                 if (rest == true) {
                     msg = "다음 턴에 이동할 수 있습니다.";
                     rest = false;
-                }
-                else {
+                } else {
                     this.sum += diceNum;
 
                     checkEnd(board);
-                    catchs(name, sum, dos);
-
-                    if (board[this.sum] == 1) {
-                        this.sum += diceNum;
-                        msg = "Jump!! " + diceNum + "칸을 점프해 현재 " + this.sum + "칸 입니다.";
-                    }
-                    else if (board[this.sum] == 2) {
-                        this.sum -= diceNum;
-                        msg = "Back!! " + diceNum + "칸을 후퇴해 현재 " + this.sum + "칸 입니다.";
-                    }
-                    else if (board[this.sum] == 3) {
-                        msg = "현재 " + this.sum + "칸 입니다.\n무인도에 걸려 한턴을 쉽니다.";
-                        rest = true;
-                    }
-                    else {
+                    if (catchs(name, sum, dos)) {
                         msg = "현재 " + this.sum + "칸 입니다.";
+                    } else {
+                        if (board[this.sum] == 1) {
+                            this.sum += diceNum;
+                            msg = "Jump!! " + diceNum + "칸을 점프해 현재 " + this.sum + "칸 입니다.";
+                        } else if (board[this.sum] == 2) {
+                            this.sum -= diceNum;
+                            msg = "Back!! " + diceNum + "칸을 후퇴해 현재 " + this.sum + "칸 입니다.";
+                        } else if (board[this.sum] == 3) {
+                            msg = "현재 " + this.sum + "칸 입니다.\n무인도에 걸려 한턴을 쉽니다.";
+                            rest = true;
+                        } else {
+                            msg = "현재 " + this.sum + "칸 입니다.";
+                        }
                     }
 
                     checkEnd(board);
@@ -106,7 +104,7 @@ public class ClientHandler implements Runnable {
         }
     }
 
-    private static void catchs(String name, int sum, DataOutputStream dos) throws IOException {
+    private static boolean catchs(String name, int sum, DataOutputStream dos) throws IOException {
         for (ClientHandler handler : StreamServer.clients) {
             if (handler.name.equals(name))
                 continue;
@@ -114,8 +112,10 @@ public class ClientHandler implements Runnable {
                 handler.sum = 0;
                 dos.writeUTF("상대방의 말을 잡아 상대가 처음으로 돌아갑니다.");
                 handler.dos.writeUTF(name + "에게 말이 잡혀 처음으로 돌아갑니다.");
+                return true;
             }
         }
+        return false;
     }
 
     public static int[] board(int[] board) {
