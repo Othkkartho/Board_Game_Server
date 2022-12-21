@@ -40,8 +40,9 @@ public class ClientHandler implements Runnable {
             try {
                 diceNum = dis.read();
                 System.out.println(diceNum);
-                if (diceNum == 0) {
+                if (diceNum == -1) {
                     System.out.println(this.name + " is just leaved.");
+                    StreamServer.clients.remove(this);
                     this.s.close(); // 접속을 종료하는 클라이언트의 서버 쪽 소켓을 닫음
                     informLeave(this);
                     break;
