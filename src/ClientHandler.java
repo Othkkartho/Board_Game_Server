@@ -36,13 +36,6 @@ public class ClientHandler {
 
         System.out.println(num);
         try {
-            if (num == 0) {
-                System.out.println(name + " is just leaved.");
-                HelperMethods.sendMessage(client, "Good Bye");
-                client.close();
-                informLeave(this);
-            }
-
             if (this.rest == 1 && board[sum] == 3) {
                 msg = "skip2#0";
                 this.rest = 2;
