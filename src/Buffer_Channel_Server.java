@@ -13,8 +13,7 @@ public class Buffer_Channel_Server {
 
     private static void informNew(String name) throws IOException, InterruptedException {
         for (ClientHandler handler : clients)
-            HelperMethods.sendMessage(handler.client, name + " is just logged in");
-        TimeUnit.SECONDS.sleep(1);
+            HelperMethods.sendMessage(handler.client, name + "이/가 로그인했습니다.");
     }
 
     private static Selector acceptClient() {
@@ -28,7 +27,7 @@ public class Buffer_Channel_Server {
 
             sschannel.register(selector, SelectionKey.OP_ACCEPT);
             board = ClientHandler.boardSetup();
-            System.out.println("Game server is ready.");
+            System.out.println("게임 서버가 준비됬습니다.");
 
             boolean open = false;
 
@@ -61,10 +60,8 @@ public class Buffer_Channel_Server {
                             ClientHandler handler = new ClientHandler(client, data, 0);
                             informNew(data);
                             clients.add(handler);
-                            if (clients.size() == 1) {
+                            if (clients.size() == 1)
                                 HelperMethods.sendMessage(handler.client, "host");
-                                TimeUnit.SECONDS.sleep(1);
-                            }
                             System.out.println(data + " 게임 참가 완료");
                         }
 
@@ -88,16 +85,14 @@ public class Buffer_Channel_Server {
 
     private static void startGame(Selector selector) throws InterruptedException {
         System.out.println("참가자들 게임 시작");
-        for (ClientHandler handler : clients) {
+        for (ClientHandler handler : clients)
             HelperMethods.sendMessage(handler.client, "Game Start");
-            TimeUnit.SECONDS.sleep(1);
-        }
 
         try {
             int i = 0;
 
-            HelperMethods.sendMessage(clients.get(i).client, "Your Turn");
             TimeUnit.SECONDS.sleep(1);
+            HelperMethods.sendMessage(clients.get(i).client, "Your Turn");
 
             while (true) {
                 selector.select();
@@ -123,8 +118,7 @@ public class Buffer_Channel_Server {
                             clients.removeIf(handler -> handler.name.equals(what));
                             for (ClientHandler handler : clients)
                                 if (!handler.name.equals(what)) {
-                                    HelperMethods.sendMessage(handler.client, what+" is leaved");
-                                    TimeUnit.SECONDS.sleep(1);
+                                    HelperMethods.sendMessage(handler.client, what+"이/가_게임을_떠났습니다");
                                 }
                             client.close();
                         } else {
@@ -142,8 +136,8 @@ public class Buffer_Channel_Server {
 
                 if (clients.size() != 0) {
                     i = (i+1)% clients.size();
-                    HelperMethods.sendMessage(clients.get(i).client, "Your Turn");
                     TimeUnit.SECONDS.sleep(1);
+                    HelperMethods.sendMessage(clients.get(i).client, "Your Turn");
                 }
             }
         } catch (IOException e) {

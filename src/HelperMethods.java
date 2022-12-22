@@ -1,10 +1,13 @@
 import java.io.IOException;
+import java.net.URLEncoder;
 import java.nio.ByteBuffer;
 import java.nio.channels.SocketChannel;
+import java.nio.charset.StandardCharsets;
 
 public class HelperMethods {
     public static void sendMessage(SocketChannel socketChannel, String message) {
         try {
+            message = URLEncoder.encode(message, StandardCharsets.UTF_8);
             ByteBuffer buffer = ByteBuffer.allocate(message.length() + 1);
             buffer.put(message.getBytes());
             buffer.put((byte) 0x00);
@@ -20,7 +23,7 @@ public class HelperMethods {
 
     public static String receiveMessage(SocketChannel socketChannel) {
         try {
-            ByteBuffer byteBuffer = ByteBuffer.allocate(16);
+            ByteBuffer byteBuffer = ByteBuffer.allocate(32);
             String message = "";
             while (socketChannel.read(byteBuffer) > 0) {
                 char byteRead = 0x00;

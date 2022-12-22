@@ -25,9 +25,8 @@ public class ClientHandler {
     private void informLeave(ClientHandler handler) throws IOException, InterruptedException {
         for (ClientHandler mc : Buffer_Channel_Server.clients) {
             if (!mc.name.equals(handler.name)) {
-                msg = handler.name + " is just leaved.";
+                msg = handler.name + "님이 게임에서 떠났습니다";
                 HelperMethods.sendMessage(mc.client, msg);
-                TimeUnit.SECONDS.sleep(1);
             }
         }
     }
@@ -37,29 +36,31 @@ public class ClientHandler {
         System.out.println(num);
         try {
             if (num == 0) {
-                System.out.println(name + " is just leaved.");
-                HelperMethods.sendMessage(client, "Good Bye");
+                System.out.println(name + "님이 게임에서 떠났습니다");
+                HelperMethods.sendMessage(client, "안녕히 가세요");
                 client.close();
                 informLeave(this);
             }
 
             if (this.rest == 1 && board[sum] == 3) {
-                msg = "skip2#0";
+                msg = "다음턴에 이동할 수 있습니다.";
                 this.rest = 2;
             } else if (this.rest == 1) {
                 this.rest = 0;
             } else {
                 sum += num;
                 if (sum >= board.length) {
-                    HelperMethods.sendMessage(channel, "win#" + board.length);
+                    HelperMethods.sendMessage(channel, "win");
                     channel.close();
+                    Buffer_Channel_Server.clients.removeIf(handler -> handler.name.equals(name));
                     for (ClientHandler handler : Buffer_Channel_Server.clients) {
                         if (!handler.name.equals(name)) {
-                            HelperMethods.sendMessage(handler.client, "lose#"+handler.sum);
+                            HelperMethods.sendMessage(handler.client, "lose");
                             handler.client.close();
-                            TimeUnit.SECONDS.sleep(1);
+                            Buffer_Channel_Server.clients.remove(handler);
                         }
                     }
+                    return;
                 }
             }
 
@@ -68,20 +69,20 @@ public class ClientHandler {
 
             if (board[sum] == 1) {
                 sum += num;
-                msg = "jump#"+sum+"#"+num;
+                msg = num+"칸을 점프해 "+sum+"칸에 도착했습니다";
             } else if (board[sum] == 2) {
                 sum -= num;
-                msg = "back#"+sum+"#"+num;
+                msg = num+"칸 뒤로 가 "+sum+"칸에 도착했습니다";
             } else if (board[sum] == 3 && this.rest == 0) {
-                msg = "skip#"+sum;
+                msg = sum+"칸에 도착했지만 무인도라 한 턴 쉽니다";
                 this.rest = 1;
             } else if (this.rest == 2) {
                 this.rest += 1;
             } else if (this.rest == 3) {
                 this.rest = 0;
-                msg = "go#"+sum+"#"+num;
+                msg = num+"칸을 이동해 "+sum+"칸에 도착했습니다";
             } else {
-                msg = "go#"+sum+"#"+num;
+                msg = num+"칸을 이동해 "+sum+"칸에 도착했습니다";
             }
 
             if (catchs(msg))
@@ -91,11 +92,9 @@ public class ClientHandler {
         }
 
         HelperMethods.sendMessage(client, msg);
-        TimeUnit.SECONDS.sleep(1);
         for (ClientHandler handler : Buffer_Channel_Server.clients) {
             if (!handler.name.equals(name)) {
-                HelperMethods.sendMessage(handler.client, name + "#" + msg);
-                TimeUnit.SECONDS.sleep(1);
+                HelperMethods.sendMessage(handler.client, name + "이/가 " + msg);
             }
         }
     }
@@ -106,9 +105,8 @@ public class ClientHandler {
                 continue;
             if (sum > 0 && handler.sum > 0 && handler.sum == sum) {
                 handler.sum = 0;
-                HelperMethods.sendMessage(client, "catch#"+sum);
-                TimeUnit.SECONDS.sleep(1);
-                HelperMethods.sendMessage(handler.client, name+"#catch#"+sum);
+                HelperMethods.sendMessage(client, sum+"칸에서 상대방 말을 잡아 상대 말이 처음으로 돌아갑니다");
+                HelperMethods.sendMessage(handler.client, name+"가 "+sum+"에서 당신의 말을 잡아 말이 처음으로 돌아갑니다");
                 return true;
             }
         }
@@ -121,9 +119,8 @@ public class ClientHandler {
                 continue;
             if (sum > 0 && handler.sum > 0 && handler.sum == sum) {
                 handler.sum = 0;
-                HelperMethods.sendMessage(client, "catch#"+msg);
-                TimeUnit.SECONDS.sleep(1);
-                HelperMethods.sendMessage(handler.client, name+"#catch");
+                HelperMethods.sendMessage(client, msg+"\n"+sum+"칸에서 상대방 말을 잡아 상대 말이 처음으로 돌아갑니다");
+                HelperMethods.sendMessage(handler.client, name+"가 "+sum+"에서 당신의 말을 잡아 말이 처음으로 돌아갑니다");
                 return true;
             }
         }
